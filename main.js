@@ -11,7 +11,7 @@ const canvas = document.getElementById("canvasData");
 const fieldSelectionContainer = document.createElement("div");
 fieldSelectionContainer.id = "fieldSelection";
 fieldSelectionContainer.style.margin = "10px 0";
-fieldSelectionContainer.innerHTML = "<h4>Chọn trường và màu hiển thị:</h4>";
+fieldSelectionContainer.innerHTML = "<h4 style='margin-bottom: 10px'>Chọn trường và màu hiển thị:</h4>";
 canvas.parentNode.insertBefore(fieldSelectionContainer, canvas);
 
 let currentChart = null;
@@ -39,7 +39,7 @@ function hexToRGBA(hex, alpha = 1) {
 function updateFieldSelections() {
   const datasets = getTableData().datasets;
 
-  fieldSelectionContainer.innerHTML = "<h4>Chọn trường và màu hiển thị:</h4>";
+  fieldSelectionContainer.innerHTML = "<h4 style='margin-bottom: 10px'>Chọn trường và màu hiển thị:</h4>";
 
   if (datasets.length > 0) {
     const fieldList = document.createElement("div");
@@ -181,8 +181,15 @@ function readCSV(file) {
 
     reader.onload = (event) => {
       const csvData = event.target.result;
-      const rows = csvData.split("\n");
-      const data = rows.map((row) => row.split(","));
+      // Split into rows and filter out empty rows
+      const rows = csvData.split("\n")
+        .filter(row => row.trim() !== ""); // Remove completely empty rows
+        
+      // Convert rows to array and remove empty cells
+      const data = rows.map(row => 
+        row.split(",").map(cell => cell.trim())
+      );
+
       resolve(data);
     };
 
@@ -199,7 +206,7 @@ function populateTable(csvData) {
   const tbody = table.querySelector("tbody");
   tbody.innerHTML = ""; // Clear existing rows
 
-  const columnCount = csvData[0].length;
+  const columnCount = csvData[0].length + 1; // Add one extra column
 
   // Update table headers
   const theadRow = table.querySelector("thead tr");
@@ -210,13 +217,14 @@ function populateTable(csvData) {
     theadRow.appendChild(th);
   }
 
-  // Populate rows
+  // Populate rows with data
   csvData.forEach((row, rowIndex) => {
     const tr = document.createElement("tr");
     const th = document.createElement("th");
     th.textContent = rowIndex + 1;
     tr.appendChild(th);
 
+    // Add data cells
     row.forEach((cell) => {
       const td = document.createElement("td");
       const input = document.createElement("input");
@@ -227,8 +235,40 @@ function populateTable(csvData) {
       tr.appendChild(td);
     });
 
+    // Add empty cell for the extra column
+    const emptyTd = document.createElement("td");
+    const emptyInput = document.createElement("input");
+    emptyInput.type = "text";
+    emptyInput.value = "";
+    emptyInput.addEventListener("input", handleInput);
+    emptyTd.appendChild(emptyInput);
+    tr.appendChild(emptyTd);
+
     tbody.appendChild(tr);
   });
+
+  // Add one empty row
+  const emptyRow = document.createElement("tr");
+  const emptyRowHeader = document.createElement("th");
+  emptyRowHeader.textContent = csvData.length + 1;
+  emptyRow.appendChild(emptyRowHeader);
+
+  // Add empty cells for the empty row
+  for (let i = 0; i < columnCount; i++) {
+    const td = document.createElement("td");
+    const input = document.createElement("input");
+    input.type = "text";
+    input.value = "";
+    input.addEventListener("input", handleInput);
+    td.appendChild(input);
+    emptyRow.appendChild(td);
+  }
+
+  tbody.appendChild(emptyRow);
+
+  // Update field selections after populating table
+  selectedFields.clear();
+  updateFieldSelections();
 }
 
 // Function to save current table state to localStorage
