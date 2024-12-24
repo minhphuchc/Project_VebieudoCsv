@@ -57,9 +57,13 @@ th {
   background-color: #ddd;
 }
 
-input {
+input[type="text"] {
   padding: 8px;
   outline-color: orange ;
+}
+
+input[type="file"] {
+  padding: 8px;
 }
 
 .container {

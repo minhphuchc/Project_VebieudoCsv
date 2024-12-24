@@ -18,7 +18,6 @@ let currentChart = null;
 let selectedFields = new Set();
 let fieldColors = new Map();
 
-// Default colors
 const defaultColors = [
   { bg: "rgba(255, 99, 132, 0.5)", border: "rgba(255, 99, 132, 1)" },
   { bg: "rgba(54, 162, 235, 0.5)", border: "rgba(54, 162, 235, 1)" },
@@ -27,7 +26,6 @@ const defaultColors = [
   { bg: "rgba(153, 102, 255, 0.5)", border: "rgba(153, 102, 255, 1)" },
 ];
 
-// Function to convert hex to rgba
 function hexToRGBA(hex, alpha = 1) {
   let r = parseInt(hex.slice(1, 3), 16),
     g = parseInt(hex.slice(3, 5), 16),
@@ -38,6 +36,7 @@ function hexToRGBA(hex, alpha = 1) {
 // Function to update field selection checkboxes with color pickers
 function updateFieldSelections() {
   const datasets = getTableData().datasets;
+  console.log(datasets);
 
   fieldSelectionContainer.innerHTML = "<h4 style='margin-bottom: 10px'>Chọn trường và màu hiển thị:</h4>";
 
@@ -47,12 +46,9 @@ function updateFieldSelections() {
     fieldList.style.flexWrap = "wrap";
     fieldList.style.gap = "10px";
 
-    // Initialize selectedFields if empty
     if (selectedFields.size === 0) {
-      // Select all fields by default
       datasets.forEach((_, index) => selectedFields.add(index));
     } else {
-      // Remove invalid selections
       selectedFields = new Set(
         Array.from(selectedFields).filter((index) => index < datasets.length)
       );
@@ -144,8 +140,8 @@ function getTableData() {
   let labels = [];
   let datasets = [];
   const rows = document.querySelectorAll("tbody tr");
+  console.log('call getTableData');
 
-  // First, collect all datasets
   rows.forEach((row, rowIndex) => {
     const inputs = row.querySelectorAll("input");
     inputs.forEach((input, colIndex) => {
@@ -162,12 +158,10 @@ function getTableData() {
     });
   });
 
-  // Initialize selectedFields if empty
-  if (selectedFields.size === 0 && datasets.length > 0) {
+  if (datasets.length > 0) {
     datasets.forEach((_, index) => selectedFields.add(index));
   }
 
-  // Filter datasets based on selection
   const filteredDatasets = datasets.filter((_, index) => selectedFields.has(index));
 
   data = { labels: [...labels], datasets: [...filteredDatasets] };
@@ -181,11 +175,9 @@ function readCSV(file) {
 
     reader.onload = (event) => {
       const csvData = event.target.result;
-      // Split into rows and filter out empty rows
       const rows = csvData.split("\n")
-        .filter(row => row.trim() !== ""); // Remove completely empty rows
-        
-      // Convert rows to array and remove empty cells
+        .filter(row => row.trim() !== "");
+      
       const data = rows.map(row => 
         row.split(",").map(cell => cell.trim())
       );
@@ -201,16 +193,15 @@ function readCSV(file) {
   });
 }
 
-// Function to populate table with CSV data
 function populateTable(csvData) {
   const tbody = table.querySelector("tbody");
-  tbody.innerHTML = ""; // Clear existing rows
+  tbody.innerHTML = "";
 
-  const columnCount = csvData[0].length + 1; // Add one extra column
+  const columnCount = csvData[0].length + 1; 
 
   // Update table headers
   const theadRow = table.querySelector("thead tr");
-  theadRow.innerHTML = "<th></th>"; // Clear existing headers
+  theadRow.innerHTML = "<th></th>";
   for (let i = 0; i < columnCount; i++) {
     const th = document.createElement("th");
     th.textContent = i + 1;
@@ -266,12 +257,10 @@ function populateTable(csvData) {
 
   tbody.appendChild(emptyRow);
 
-  // Update field selections after populating table
   selectedFields.clear();
   updateFieldSelections();
 }
 
-// Function to save current table state to localStorage
 function saveToLocalStorage() {
   const tableData = [];
   const rows = table.querySelectorAll("tbody tr");
@@ -283,7 +272,6 @@ function saveToLocalStorage() {
       rowData.push(input.value);
     });
     if (rowData.some((value) => value !== "")) {
-      // Only save rows that have data
       tableData.push(rowData);
     }
   });
@@ -296,13 +284,12 @@ function saveToLocalStorage() {
 
   try {
     localStorage.setItem("chartData", JSON.stringify(savedData));
-    alert("Data saved successfully!");
+    alert("Lưu dữ liệu thành công!");
   } catch (error) {
-    alert("Error saving data: " + error.message);
+    alert("Lỗi : " + error.message);
   }
 }
 
-// Function to load table state from localStorage
 function loadFromLocalStorage() {
   try {
     const savedData = localStorage.getItem("chartData");
@@ -313,16 +300,10 @@ function loadFromLocalStorage() {
 
     const { tableData, chartType } = JSON.parse(savedData);
 
-    // Set chart type
     chartTypeSelect.value = chartType;
-
-    // Clear existing table
     clearTableData();
-
-    // Populate table with saved data
     populateTable(tableData);
 
-    // Update chart
     const data = getTableData();
     if (data.datasets.length > 0) {
       updateChart(data);
@@ -330,15 +311,15 @@ function loadFromLocalStorage() {
 
     updateFieldSelections();
 
-    alert("Data loaded successfully!");
+    alert("Load dữ liệu thành công!");
   } catch (error) {
-    alert("Error loading data: " + error.message);
+    alert("Lỗi: " + error.message);
   }
 }
 
 // Function to create/update chart
 function updateChart(data) {
-  // Destroy existing chart if it exists
+
   if (currentChart) {
     currentChart.destroy();
   }
@@ -641,7 +622,6 @@ function updateChart(data) {
   currentChart = new Chart(canvas, chartConfig);
 }
 
-// Function to add a new row
 function addRow() {
   const tbody = table.querySelector("tbody");
   const rowCount = tbody.querySelectorAll("tr").length;
@@ -665,7 +645,6 @@ function addRow() {
   tbody.appendChild(newRow);
 }
 
-// Function to add a new column
 function addColumn() {
   const theadRow = table.querySelector("thead tr");
   const newHeader = document.createElement("th");
@@ -684,7 +663,6 @@ function addColumn() {
   });
 }
 
-// Handle input event to check if a new row or column is needed
 function handleInput(event) {
   const input = event.target;
   const row = input.closest("tr");
@@ -705,7 +683,6 @@ function handleInput(event) {
   updateFieldSelections();
 }
 
-// Function to clear all table data
 function clearTableData() {
   const inputs = table.querySelectorAll("tbody input");
   inputs.forEach((input) => (input.value = ""));
@@ -738,7 +715,7 @@ csvFileInput.addEventListener("change", async (event) => {
     try {
       const csvData = await readCSV(file);
       populateTable(csvData);
-      selectedFields.clear(); // Clear field selections for new data
+      selectedFields.clear(); 
       updateFieldSelections();
     } catch (error) {
       alert("Error reading CSV file: " + error.message);
