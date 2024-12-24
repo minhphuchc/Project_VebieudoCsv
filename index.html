@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="containet_input">
+        <h1>Vẽ biểu đồ từ dữ liệu</h1>
+
+        <div class="input_table">
+          <table>
+            <thead>
+              <tr>
+                <th></th>
+                <th>1</th>
+                <th>2</th>
+                <th>3</th>
+                <th>4</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th>1</th>
+                <td><input type="text" name="" id=""></td>
+                <td><input type="text" name="" id=""></td>
+                <td><input type="text" name="" id=""></td>
+                <td><input type="text" name="" id=""></td>
+              </tr>
+              <tr>
+                <th>2</th>
+                <td><input type="text" name="" id=""></td>
+                <td><input type="text" name="" id=""></td>
+                <td><input type="text" name="" id=""></td>
+                <td><input type="text" name="" id=""></td>
+              </tr>
+              <tr>
+                <th>3</th>
+                <td><input type="text" name="" id=""></td>
+                <td><input type="text" name="" id=""></td>
+                <td><input type="text" name="" id=""></td>
+                <td><input type="text" name="" id=""></td>
+              </tr>
+              <tr>
+                <th>4</th>
+                <td><input type="text" name="" id=""></td>
+                <td><input type="text" name="" id=""></td>
+                <td><input type="text" name="" id=""></td>
+                <td><input type="text" name="" id=""></td>
+              </tr>
+              <tr>
+                <th>5</th>
+                <td><input type="text" name="" id=""></td>
+                <td><input type="text" name="" id=""></td>
+                <td><input type="text" name="" id=""></td>
+                <td><input type="text" name="" id=""></td>
+              </tr>
+              <tr>
+                <th>6</th>
+                <td><input type="text" name="" id=""></td>
+                <td><input type="text" name="" id=""></td>
+                <td><input type="text" name="" id=""></td>
+                <td><input type="text" name="" id=""></td>
+              </tr>
+              <tr>
+                <th>7</th>
+                <td><input type="text" name="" id=""></td>
+                <td><input type="text" name="" id=""></td>
+                <td><input type="text" name="" id=""></td>
+                <td><input type="text" name="" id=""></td>
+              </tr>
+              <tr>
+                <th>8</th>
+                <td><input type="text" name="" id=""></td>
+                <td><input type="text" name="" id=""></td>
+                <td><input type="text" name="" id=""></td>
+                <td><input type="text" name="" id=""></td>
+              </tr>
+              <tr>
+                <th>9</th>
+                <td><input type="text" name="" id=""></td>
+                <td><input type="text" name="" id=""></td>
+                <td><input type="text" name="" id=""></td>
+                <td><input type="text" name="" id=""></td>
+              </tr>
+              <tr>
+                <th>10</th>
+                <td><input type="text" name="" id=""></td>
+                <td><input type="text" name="" id=""></td>
+                <td><input type="text" name="" id=""></td>
+                <td><input type="text" name="" id=""></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <input type="file" id="csvFileInput" accept=".csv" />
+
+        <div>
+          <label>Loại Biểu Đồ:</label>
+          <select id="chartType">
+            <option value="line">Đường</option>
+            <option value="bar">Cột</option>
+            <option value="s-bar">Cột xếp trồng</option>
+            <option value="h-bar">Thanh ngang</option>
+            <option value="sh-bar">Thanh ngang xếp trồng</option>
+            <option value="pie">Tròn</option>
+            <option value="doughnut">Vành khăn</option>
+            <option value="area">miền</option>
+            <option value="radar">radar</option>
+          </select>
+        </div>
+
+        <button>Tạo biểu đồ</button>
+        <button id="clearTableButton">Xóa toàn bộ dữ liệu</button>
+        <button id="saveButton">Lưu</button>
+        <button id="loadButton">Tải từ localStrorage</button>
+      </div>
+
+      <div class="container_chart">
+        <canvas id="canvasData"></canvas>
+      </div>
+    </div>
+  
+    <script src="main.js"></script>
+  </body>
+</html>
