@@ -47,10 +47,16 @@ function updateFieldSelections() {
     fieldList.style.flexWrap = "wrap";
     fieldList.style.gap = "10px";
 
-    // Remove invalid selections
-    selectedFields = new Set(
-      Array.from(selectedFields).filter((index) => index < datasets.length)
-    );
+    // Initialize selectedFields if empty
+    if (selectedFields.size === 0) {
+      // Select all fields by default
+      datasets.forEach((_, index) => selectedFields.add(index));
+    } else {
+      // Remove invalid selections
+      selectedFields = new Set(
+        Array.from(selectedFields).filter((index) => index < datasets.length)
+      );
+    }
 
     datasets.forEach((dataset, index) => {
       if (dataset && dataset[0]) {
@@ -65,8 +71,7 @@ function updateFieldSelections() {
         const checkbox = document.createElement("input");
         checkbox.type = "checkbox";
         checkbox.id = `field-${index}`;
-        checkbox.checked =
-          selectedFields.has(index) || selectedFields.size === 0;
+        checkbox.checked = selectedFields.has(index);
 
         // Label
         const label = document.createElement("label");
@@ -83,9 +88,7 @@ function updateFieldSelections() {
         // Set initial color
         if (!fieldColors.has(index)) {
           const defaultColor = defaultColors[index % defaultColors.length];
-          // Convert rgba to hex for the color picker
-          const hex =
-            "#" +
+          const hex = "#" +
             defaultColor.bg
               .match(/\d+/g)
               .slice(0, 3)
@@ -105,6 +108,11 @@ function updateFieldSelections() {
             selectedFields.add(index);
           } else {
             selectedFields.delete(index);
+          }
+          // Prevent deselecting all fields
+          if (selectedFields.size === 0) {
+            selectedFields.add(index);
+            checkbox.checked = true;
           }
           updateChart(getTableData());
         });
@@ -137,6 +145,7 @@ function getTableData() {
   let datasets = [];
   const rows = document.querySelectorAll("tbody tr");
 
+  // First, collect all datasets
   rows.forEach((row, rowIndex) => {
     const inputs = row.querySelectorAll("input");
     inputs.forEach((input, colIndex) => {
@@ -153,13 +162,15 @@ function getTableData() {
     });
   });
 
-  // Filter datasets based on selection
-  if (selectedFields.size > 0) {
-    datasets = datasets.filter((_, index) => selectedFields.has(index));
+  // Initialize selectedFields if empty
+  if (selectedFields.size === 0 && datasets.length > 0) {
+    datasets.forEach((_, index) => selectedFields.add(index));
   }
 
-  data = { labels: [...labels], datasets: [...datasets] };
-  console.log(data);
+  // Filter datasets based on selection
+  const filteredDatasets = datasets.filter((_, index) => selectedFields.has(index));
+
+  data = { labels: [...labels], datasets: [...filteredDatasets] };
   return data;
 }
 
@@ -658,8 +669,12 @@ function handleInput(event) {
 function clearTableData() {
   const inputs = table.querySelectorAll("tbody input");
   inputs.forEach((input) => (input.value = ""));
-  selectedFields.clear(); // Clear field selections
-  updateFieldSelections(); // Update field selection UI
+  selectedFields.clear();
+  updateFieldSelections();
+  if (currentChart) {
+    currentChart.destroy();
+    currentChart = null;
+  }
 }
 
 // Event Listeners
