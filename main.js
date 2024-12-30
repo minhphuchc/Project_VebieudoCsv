@@ -140,15 +140,15 @@ function getTableData() {
   let labels = [];
   let datasets = [];
   const rows = document.querySelectorAll("tbody tr");
-  console.log('call getTableData');
+console.log('call getTableData');
 
   rows.forEach((row, rowIndex) => {
     const inputs = row.querySelectorAll("input");
     inputs.forEach((input, colIndex) => {
       if (input.value.trim()) {
-        if (colIndex > 0) {
-          datasets[colIndex - 1] = datasets[colIndex - 1] || [];
-          datasets[colIndex - 1].push(input.value);
+      if (colIndex > 0) {
+        datasets[colIndex - 1] =           datasets[colIndex - 1] || [];
+datasets[colIndex - 1].push(input.value);
         }
 
         if (colIndex === 0 && rowIndex > 0) {
@@ -158,15 +158,17 @@ function getTableData() {
     });
   });
 
-  if (datasets.length > 0) {
+    if (datasets.length > 0 && selectedFields.size === 0) {
     datasets.forEach((_, index) => selectedFields.add(index));
   }
 
-  const filteredDatasets = datasets.filter((_, index) => selectedFields.has(index));
+    const filteredDatasets = datasets.filter((_, index) => selectedFields.has(index));
 
-  data = { labels: [...labels], datasets: [...filteredDatasets] };
+    data = { labels: [...labels], datasets: [...filteredDatasets] };
   return data;
 }
+
+
 
 // Function to read CSV file
 function readCSV(file) {
@@ -696,12 +698,13 @@ function clearTableData() {
 
 // Event Listeners
 createChartButton.addEventListener("click", () => {
+  selectedFields.clear();
   const data = getTableData();
   if (data.datasets.length > 0) {
-    updateChart(data);
     updateFieldSelections();
+    updateChart(data);
   } else {
-    alert("Please enter some data in the table");
+    alert("Vui lòng nhập dữ liệu vào bảng");
   }
 });
 
@@ -711,17 +714,28 @@ clearTableButton.addEventListener("click", () => {
 
 csvFileInput.addEventListener("change", async (event) => {
   const file = event.target.files[0];
+  const fileNameSpan = document.getElementById("fileName");
+
   if (file) {
     try {
+      fileNameSpan.textContent = `File đã chọn: ${file.name}`;
       const csvData = await readCSV(file);
       populateTable(csvData);
-      selectedFields.clear(); 
+      selectedFields.clear();
       updateFieldSelections();
+
+      csvFileInput.value = "";
     } catch (error) {
-      alert("Error reading CSV file: " + error.message);
+      fileNameSpan.textContent = "Lỗi khi đọc file";
+      alert("Lỗi khi đọc tệp CSV: " + error.message);
+      csvFileInput.value = "";
     }
+  } else {
+    fileNameSpan.textContent = "Không có file nào được chọn";
   }
 });
+
+
 
 chartTypeSelect.addEventListener("change", () => {
   const data = getTableData();

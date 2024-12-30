@@ -98,7 +98,12 @@
           </table>
         </div>
 
-        <input type="file" id="csvFileInput" accept=".csv" />
+        <div class="input_file">
+          <label class="btn" for="csvFileInput">Chọn file CSV:</label>
+          <input style="display: none;" type="file" id="csvFileInput" accept=".csv" />
+          <span id="fileName" style="margin-left: 10px; font-style: italic;">Không có file nào được chọn</span>
+        </div>
+        
 
         <div>
           <label>Loại Biểu Đồ:</label>
