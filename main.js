@@ -709,7 +709,9 @@ createChartButton.addEventListener("click", () => {
 });
 
 clearTableButton.addEventListener("click", () => {
-  clearTableData();
+  if (confirm("Bạn có chắc chắn muốn xóa dữ liệu bảng không?")) {
+    clearTableData();
+  }
 });
 
 csvFileInput.addEventListener("change", async (event) => {
