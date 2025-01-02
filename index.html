@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="style.css" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <title>Document</title>
+    <title>Project I - Vẽ biểu đồ</title>
   </head>
   <body>
     <div class="container">
@@ -99,7 +99,7 @@
         </div>
 
         <div class="input_file">
-          <label class="btn" for="csvFileInput">Chọn file CSV:</label>
+          <label class="btn_input" for="csvFileInput">Chọn file CSV:</label>
           <input style="display: none;" type="file" id="csvFileInput" accept=".csv" />
           <span id="fileName" style="margin-left: 10px; font-style: italic;">Không có file nào được chọn</span>
         </div>
@@ -115,15 +115,18 @@
             <option value="sh-bar">Thanh ngang xếp trồng</option>
             <option value="pie">Tròn</option>
             <option value="doughnut">Vành khăn</option>
-            <option value="area">miền</option>
-            <option value="radar">radar</option>
+            <option value="area">Miền</option>
+            <option value="radar">Radar</option>
           </select>
         </div>
 
-        <button>Tạo biểu đồ</button>
-        <button id="clearTableButton">Xóa toàn bộ dữ liệu</button>
-        <button id="saveButton">Lưu dữ liệu</button>
-        <button id="loadButton">Load dữ liệu đã lưu</button>
+        <div class="btn_group">
+          <button class="btn">Tạo biểu đồ</button>
+          <button class="btn btn_delete" id="clearTableButton">Xóa toàn bộ dữ liệu</button>
+          <button class="btn" id="saveButton">Lưu dữ liệu</button>
+          <button class="btn" id="loadButton">Load dữ liệu đã lưu</button>
+        </div>
+
       </div>
 
       <div class="container_chart">

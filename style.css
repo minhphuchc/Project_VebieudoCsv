@@ -87,7 +87,6 @@ input[type="file"] {
 
 .containet_input button {
   margin-top: 32px;
-  padding: 8px;
 }
 
 .container_chart {
@@ -109,7 +108,12 @@ select {
   padding: 4px;
 }
 
-.btn {
+.btn_group {
+  display: flex;
+  gap: 8px;
+}
+
+.btn_input {
   padding: 8px;
   background-color: #000;
   color: #fff;
@@ -119,3 +123,24 @@ select {
   font-size: 14px;
 }
 
+.btn {
+  background: #5CB338;
+  border: none;
+  border-radius: 4px;
+  color: #fff;
+  font-size: 14px;
+  padding: 12px;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background: #4A8C2A;
+}
+
+.btn.btn_delete {
+  background: #FB4141;
+}
+
+.btn.btn_delete:hover {
+  background: #D33F3F;
+}
